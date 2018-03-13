@@ -14,6 +14,6 @@ class Main {
 
         def mainFrame = new QuestionFrame(document)//CommonFrame(document)
         mainFrame.run()
-
+        mainFrame.showStatus()
     }
 }

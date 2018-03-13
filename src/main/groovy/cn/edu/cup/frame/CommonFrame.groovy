@@ -3,6 +3,8 @@ package cn.edu.cup.frame
 import groovy.swing.SwingBuilder
 
 import javax.swing.JFileChooser
+import javax.swing.JTabbedPane
+import java.awt.GridLayout
 import java.io.FileFilter
 import javax.swing.JFrame
 import javax.swing.UIManager
@@ -24,10 +26,14 @@ class CommonFrame {
 
     def document
     def status
+    def console
+    def mainTabs
+    def statusPanel
 
     /*
     * 打开文件
     * */
+
     def openFile(extName) {
         def o = new JFileChooser()
         o.setFileSelectionMode(JFileChooser.FILES_ONLY)
@@ -36,7 +42,7 @@ class CommonFrame {
 
             @Override
             boolean accept(File afile) {
-                if (afile.getName().endsWith(extName)){
+                if (afile.getName().endsWith(extName)) {
                     return true
                 } else {
                     return false
@@ -58,13 +64,20 @@ class CommonFrame {
 
     }
 
-
     /*
     * 显示程序当前的状态
     * */
 
     def showStatus() {
         //显示结果
+        def tmp = []
+        statusPanel.clear()
+        //document.class.properties.each { e->
+        //document.class.fields.each { e ->
+        document.status.each { e ->
+            tmp.add("${e}\n")
+        }
+        statusPanel.text = "${tmp}"
     }
 
     /*
@@ -129,11 +142,35 @@ class CommonFrame {
     }
 
     /*
+    * 显示区
+    * */
+
+    def mainPanel = {
+        swing.panel(layout: new GridLayout(1, 1), constraints: BorderLayout.CENTER) {
+            console = textArea()
+        }
+    }
+
+
+    def mainTabPanel = {
+        mainTabs = swing.tabbedPane(id: "tabs", tabLayoutPolicy: JTabbedPane.SCROLL_TAB_LAYOUT) {
+            //主显示区
+            console = textArea(id: 'console')
+            //目标
+            scrollPane(id: 'statusPanel') {
+                statusPanel = textArea()
+            }
+        }
+    }
+
+    /*
     * 设置界面
     * */
 
     def setupUI() {
         theToolBar()
+        //mainPanel()
+        mainTabPanel()
     }
 
     /*
